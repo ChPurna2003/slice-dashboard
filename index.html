@@ -1,0 +1,297 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.dash{background:#0a0d14;color:#e8eaf0;font-family:system-ui,sans-serif;padding:10px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-bottom:9px;}
+.kpi-card{background:#131824;border:1px solid #1e2840;border-radius:9px;padding:9px 12px;}
+.kpi-lbl{font-size:10px;color:#5a6a88;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.kpi-val{font-size:22px;font-weight:700;line-height:1;}
+.kpi-sub{font-size:10px;color:#3a4558;margin-top:2px;}
+.main-grid{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:9px;}
+.panel{background:#131824;border:1px solid #1e2840;border-radius:9px;padding:11px;}
+.sec-title{font-size:10px;font-weight:600;color:#5a6a88;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;}
+.view-pill{font-size:9px;background:#0d1220;border:1px solid #1e2840;border-radius:4px;padding:2px 7px;color:#4f9eff;}
+.team-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #141c2e;}
+.team-row:last-child{border-bottom:none;}
+.rank-b{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.r1{background:#2a2010;color:#fbbf24;border:1px solid #92400e;}
+.r2{background:#1a2030;color:#94a3b8;border:1px solid #334155;}
+.r3{background:#1e1810;color:#b45309;border:1px solid #78350f;}
+.rn{background:#111827;color:#3a4558;border:1px solid #1a2035;}
+.bar-wrap{background:#0d1220;border-radius:3px;height:4px;flex:1;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;}
+.agent-row{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid #141c2e;}
+.agent-row:last-child{border-bottom:none;}
+.a-rank{width:16px;font-size:11px;color:#3a4558;text-align:center;flex-shrink:0;}
+.a-name{font-size:12px;color:#c8d0e8;line-height:1.2;}
+.a-team{font-size:10px;color:#5a6a88;}
+.a-val{font-size:13px;font-weight:700;flex-shrink:0;}
+.spot-card{background:#0d1220;border:1px solid #1e2840;border-radius:8px;padding:9px;margin-bottom:7px;}
+.avatar{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.hall-row{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #141c2e;}
+.hall-row:last-child{border-bottom:none;}
+.hall-title{font-size:10px;color:#5a6a88;}
+.hall-name{font-size:12px;font-weight:600;color:#e8eaf0;}
+.inact-row{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid #141c2e;font-size:11px;}
+.inact-row:last-child{border-bottom:none;}
+.inact-b{padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;flex-shrink:0;min-width:28px;text-align:center;}
+.iy{background:#2a2010;color:#fbbf24;}
+.io{background:#1e1808;color:#fb923c;}
+.ir{background:#1e0808;color:#f87171;}
+.sdot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.dg{background:#34d399;}
+.dr{background:#f87171;}
+.do{background:#fb923c;}
+.dy{background:#fbbf24;}
+.ticker{background:#0a0d14;border-top:1px solid #1a2035;padding:6px 10px;overflow:hidden;white-space:nowrap;margin-top:9px;}
+.tick-inner{display:inline-block;animation:scroll 45s linear infinite;}
+@keyframes scroll{0%{transform:translateX(100%);}100%{transform:translateX(-200%);}}
+.tick-item{display:inline-block;margin-right:55px;font-size:11px;color:#8090a8;}
+.tick-item b{color:#4f9eff;font-weight:600;}
+.live-b{display:flex;align-items:center;gap:5px;background:#0d200f;border:1px solid #166534;border-radius:5px;padding:3px 8px;font-size:10px;color:#34d399;}
+.pulse{width:5px;height:5px;border-radius:50%;background:#34d399;animation:p 2s infinite;}
+@keyframes p{0%,100%{opacity:1;}50%{opacity:.3;}}
+.fade{animation:fd .4s ease;}
+@keyframes fd{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:translateY(0);}}
+.divider{height:1px;background:#1a2035;margin:6px 0;}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Slice Ops War Room — live team and agent performance dashboard</h2>
+
+<div class="dash">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
+    <div style="font-size:16px;font-weight:700;color:#fff;letter-spacing:-.02em;">SLICE <span style="color:#4f9eff;">OPS</span> WAR ROOM</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:10px;color:#3a4558;" id="clock">—</span>
+      <div class="live-b"><span class="pulse"></span>LIVE</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-lbl">Total Calls</div><div class="kpi-val" style="color:#4f9eff;">14,823</div><div class="kpi-sub">+1,204 last hour</div></div>
+    <div class="kpi-card"><div class="kpi-lbl">Approvals</div><div class="kpi-val" style="color:#34d399;">9,341</div><div class="kpi-sub">63% approval rate</div></div>
+    <div class="kpi-card"><div class="kpi-lbl">Active Agents</div><div class="kpi-val" style="color:#2dd4bf;">203</div><div class="kpi-sub"><span class="sdot dg"></span> Online now</div></div>
+    <div class="kpi-card"><div class="kpi-lbl">Inactive</div><div class="kpi-val" style="color:#f87171;">27</div><div class="kpi-sub"><span class="sdot dr"></span> Need attention</div></div>
+    <div class="kpi-card"><div class="kpi-lbl">Approval Rate</div><div class="kpi-val" style="color:#fbbf24;">63.0%</div><div class="kpi-sub">Target: 70%</div></div>
+    <div class="kpi-card"><div class="kpi-lbl">Avg Active Hrs</div><div class="kpi-val" style="color:#a78bfa;">5.8h</div><div class="kpi-sub">Per agent today</div></div>
+  </div>
+
+  <div class="main-grid">
+
+    <div class="panel">
+      <div class="sec-title">
+        <span id="left-title">🏆 Team Championship</span>
+        <span class="view-pill" id="left-pill">Calls</span>
+      </div>
+      <div id="left-board"></div>
+    </div>
+
+    <div class="panel">
+      <div class="sec-title">
+        <span id="agent-title">⚡ Top Performers</span>
+        <span class="view-pill" id="agent-pill">Calls</span>
+      </div>
+      <div id="agent-board"></div>
+    </div>
+
+    <div class="panel" style="display:flex;flex-direction:column;gap:0;">
+      <div class="sec-title">🌟 Spotlight</div>
+      <div id="spotlight"></div>
+      <div class="divider"></div>
+      <div class="sec-title" style="margin-top:4px;">🏅 Hall of Fame</div>
+      <div id="hall"></div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:9px;">
+    <div class="panel">
+      <div class="sec-title">🚨 Inactive Agent Monitor <span style="display:flex;gap:10px;font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;"><span style="color:#fbbf24;">&#9679; 5–10 min</span><span style="color:#fb923c;">&#9679; 10–15 min</span><span style="color:#f87171;">&#9679; 15+ min</span></span></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0 16px;" id="inactive-grid"></div>
+    </div>
+  </div>
+
+  <div class="ticker">
+    <div class="tick-inner" id="tick-txt"></div>
+  </div>
+</div>
+
+<script>
+const TEAMS=[
+  {name:'Team Phoenix',color:'#f87171',calls:1820,approvals:1190,active:24,inactive:3},
+  {name:'Team Titans',color:'#4f9eff',calls:1740,approvals:1080,active:22,inactive:2},
+  {name:'Team Nexus',color:'#a78bfa',calls:1610,approvals:1020,active:21,inactive:4},
+  {name:'Team Vortex',color:'#34d399',calls:1580,approvals:970,active:20,inactive:5},
+  {name:'Team Blaze',color:'#fbbf24',calls:1490,approvals:910,active:19,inactive:3},
+  {name:'Team Storm',color:'#2dd4bf',calls:1420,approvals:880,active:18,inactive:6},
+  {name:'Team Falcon',color:'#fb923c',calls:1380,approvals:850,active:20,inactive:4},
+  {name:'Team Pulse',color:'#f472b6',calls:1310,approvals:810,active:17,inactive:3},
+  {name:'Team Zenith',color:'#60a5fa',calls:1280,approvals:790,active:22,inactive:2},
+  {name:'Team Apex',color:'#86efac',calls:1190,approvals:841,active:20,inactive:2},
+];
+
+const AGENTS=[
+  {name:'Rahul Sharma',team:'Phoenix',calls:187,approvals:124,hrs:7.2},
+  {name:'Akhil Reddy',team:'Titans',calls:174,approvals:119,hrs:7.0},
+  {name:'Priya Nair',team:'Nexus',calls:168,approvals:108,hrs:6.8},
+  {name:'Kiran Rao',team:'Vortex',calls:162,approvals:115,hrs:7.1},
+  {name:'Sneha Pillai',team:'Blaze',calls:158,approvals:102,hrs:6.5},
+  {name:'Arjun Singh',team:'Phoenix',calls:154,approvals:98,hrs:6.9},
+  {name:'Deepa Kumar',team:'Storm',calls:149,approvals:95,hrs:6.4},
+  {name:'Vivek Menon',team:'Titans',calls:144,approvals:91,hrs:6.6},
+  {name:'Ananya Das',team:'Falcon',calls:141,approvals:89,hrs:6.3},
+  {name:'Rohit Gupta',team:'Pulse',calls:138,approvals:87,hrs:6.1},
+];
+
+const SPOTS=[
+  {title:'Employee of the Hour',name:'Rahul Sharma',team:'Phoenix',ach:'187 calls — Team MVP',color:'#fbbf24',ini:'RS'},
+  {title:'Call Champion',name:'Akhil Reddy',team:'Titans',ach:'174 calls today',color:'#4f9eff',ini:'AR'},
+  {title:'Approval Champion',name:'Kiran Rao',team:'Vortex',ach:'115 approvals — 71% rate',color:'#34d399',ini:'KR'},
+  {title:'Rising Star',name:'Sneha Pillai',team:'Blaze',ach:'+38 calls vs last hour',color:'#a78bfa',ini:'SP'},
+];
+
+const HALL=[
+  {icon:'👑',title:'Call King',name:'Rahul Sharma',sub:'187 calls'},
+  {icon:'✅',title:'Approval King',name:'Kiran Rao',sub:'115 approvals'},
+  {icon:'🏆',title:'Best Team',name:'Team Phoenix',sub:'1,820 calls'},
+  {icon:'🚀',title:'Rising Star',name:'Sneha Pillai',sub:'+38 this hour'},
+  {icon:'🌟',title:'Employee of Day',name:'Akhil Reddy',sub:'174 calls | 119 appr'},
+];
+
+const INACTIVE=[
+  {name:'Manoj Tiwari',team:'Apex',mins:23,cls:'ir',dc:'dr'},
+  {name:'Suresh Patel',team:'Zenith',mins:18,cls:'ir',dc:'dr'},
+  {name:'Lalitha Rao',team:'Storm',mins:16,cls:'ir',dc:'dr'},
+  {name:'Farhan Ali',team:'Pulse',mins:13,cls:'io',dc:'do'},
+  {name:'Ritika Joshi',team:'Blaze',mins:11,cls:'io',dc:'do'},
+  {name:'Amit Verma',team:'Falcon',mins:10,cls:'io',dc:'do'},
+  {name:'Divya Nair',team:'Nexus',mins:8,cls:'iy',dc:'dy'},
+  {name:'Sanjay Iyer',team:'Vortex',mins:7,cls:'iy',dc:'dy'},
+  {name:'Pooja Sharma',team:'Phoenix',mins:6,cls:'iy',dc:'dy'},
+  {name:'Rahul Gupta',team:'Titans',mins:5,cls:'iy',dc:'dy'},
+  {name:'Meera Das',team:'Apex',mins:5,cls:'iy',dc:'dy'},
+  {name:'Karthik R',team:'Storm',mins:5,cls:'iy',dc:'dy'},
+];
+
+const TICKS=[
+  'Agent <b>Rahul Sharma</b> crossed 150 calls — on fire!',
+  'Team <b>Phoenix</b> holds Rank #1 with 1,820 calls',
+  'Team <b>Titans</b> just crossed 1,000 approvals!',
+  'Agent <b>Akhil Reddy</b> entered Top 10 Approval list',
+  'Operations crossed <b>14,000 calls</b> today — milestone!',
+  'Team <b>Vortex</b> climbing fast — now at Rank #4',
+  'Agent <b>Priya Nair</b> — 168 calls and counting!',
+  'Overall active agents: <b>203</b> — strongest day this week',
+];
+
+const TEAM_VIEWS=[
+  {key:'calls',label:'Calls',pill:'Calls'},
+  {key:'approvals',label:'Approvals',pill:'Approvals'},
+  {key:'score',label:'Score',pill:'Score'},
+];
+const AGENT_VIEWS=[
+  {key:'calls',label:'calls',pill:'Calls',color:'#4f9eff',fmt:v=>v},
+  {key:'approvals',label:'approvals',pill:'Approvals',color:'#34d399',fmt:v=>v},
+  {key:'hrs',label:'hours',pill:'Hrs',color:'#a78bfa',fmt:v=>v.toFixed(1)+'h'},
+];
+
+let tv=0,av=0,sv=0;
+
+function renderTeams(){
+  const v=TEAM_VIEWS[tv%TEAM_VIEWS.length];
+  document.getElementById('left-pill').textContent=v.pill;
+  const sorted=[...TEAMS].sort((a,b)=>{
+    const ga=v.key==='score'?Math.round((a.calls*.6+a.approvals*.4)/10):a[v.key];
+    const gb=v.key==='score'?Math.round((b.calls*.6+b.approvals*.4)/10):b[v.key];
+    return gb-ga;
+  });
+  const maxVal=v.key==='score'?Math.round((sorted[0].calls*.6+sorted[0].approvals*.4)/10):sorted[0][v.key];
+  document.getElementById('left-board').innerHTML=sorted.map((t,i)=>{
+    const val=v.key==='score'?Math.round((t.calls*.6+t.approvals*.4)/10):t[v.key];
+    const pct=Math.round((val/maxVal)*100);
+    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
+    return `<div class="team-row"><div class="rank-b ${rc}">${medal}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
+          <span style="font-size:12px;font-weight:600;color:${t.color};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px;">${t.name}</span>
+          <span style="font-size:12px;font-weight:700;color:#c8d0e8;">${val.toLocaleString()}</span>
+        </div>
+        <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${t.color};"></div></div>
+      </div></div>`;
+  }).join('');
+  tv++;
+}
+
+function renderAgents(){
+  const v=AGENT_VIEWS[av%AGENT_VIEWS.length];
+  document.getElementById('agent-title').textContent='⚡ Top '+v.pill+' Performers';
+  document.getElementById('agent-pill').textContent=v.pill;
+  const sorted=[...AGENTS].sort((a,b)=>b[v.key]-a[v.key]);
+  document.getElementById('agent-board').innerHTML=sorted.map((a,i)=>`
+    <div class="agent-row fade">
+      <span class="a-rank">${i+1}</span>
+      <div style="flex:1;min-width:0;">
+        <div class="a-name">${a.name}</div>
+        <div class="a-team">${a.team}</div>
+      </div>
+      <span class="a-val" style="color:${v.color}">${v.fmt(a[v.key])}</span>
+    </div>`).join('');
+  av++;
+}
+
+function renderSpotlight(){
+  const s=SPOTS[sv%SPOTS.length];
+  document.getElementById('spotlight').innerHTML=`
+    <div class="spot-card fade">
+      <div style="font-size:9px;color:#4b5563;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em;">${s.title}</div>
+      <div style="display:flex;align-items:center;gap:9px;">
+        <div class="avatar" style="background:${s.color}22;color:${s.color};border:1px solid ${s.color}44;">${s.ini}</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#fff;">${s.name}</div>
+          <div style="font-size:11px;color:#5a6a88;">${s.team}</div>
+          <div style="font-size:11px;color:#8090a8;margin-top:2px;">${s.ach}</div>
+        </div>
+      </div>
+    </div>`;
+  sv++;
+}
+
+function renderHall(){
+  document.getElementById('hall').innerHTML=HALL.map(h=>`
+    <div class="hall-row">
+      <span style="font-size:14px;flex-shrink:0;">${h.icon}</span>
+      <div>
+        <div class="hall-title">${h.title}</div>
+        <div class="hall-name">${h.name}</div>
+      </div>
+      <div style="margin-left:auto;font-size:10px;color:#3a4558;text-align:right;">${h.sub}</div>
+    </div>`).join('');
+}
+
+function renderInactive(){
+  const sorted=[...INACTIVE].sort((a,b)=>b.mins-a.mins);
+  document.getElementById('inactive-grid').innerHTML=sorted.map(a=>`
+    <div class="inact-row">
+      <span class="sdot ${a.dc}"></span>
+      <span style="flex:1;color:#c8d0e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.name}</span>
+      <span style="color:#3a4558;font-size:10px;">${a.team}</span>
+      <span class="inact-b ${a.cls}">${a.mins}m</span>
+    </div>`).join('');
+}
+
+function renderTicker(){
+  document.getElementById('tick-txt').innerHTML=TICKS.map(t=>`<span class="tick-item">● ${t}</span>`).join('');
+}
+
+function renderClock(){
+  const n=new Date();
+  document.getElementById('clock').textContent='Last refresh: '+n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+renderTeams();renderAgents();renderSpotlight();renderHall();renderInactive();renderTicker();renderClock();
+setInterval(renderTeams,10000);
+setInterval(renderAgents,10000);
+setInterval(renderSpotlight,10000);
+setInterval(renderClock,10000);
+</script>
